@@ -1,0 +1,39 @@
+Create Github:
+https://github.com/fmisa/master-child.git
+
+Licensing:
+https://choosealicense.com/licenses/
+https://en.wikipedia.org/wiki/Comparison_of_free_and_open-source_software_licenses
+
+DEV NOTES:
+mvn archetype:generate \
+-DarchetypeGroupId=org.codehaus.mojo.archetypes \
+-DarchetypeArtifactId=pom-root \
+-DarchetypeVersion=RELEASE \
+-DgroupId=misa \
+-DartifactId=master-child \
+-Dversion=1.0.0-SNAPSHOT \
+-DinteractiveMode=false
+
+Git Initialize:
+git init
+git remote add upstream https://github.com/fmisa/master-child.git
+git fetch upstream
+git merge upstream/master
+git status
+git add .
+git commit
+git rebase -i --root
+    NOTE: git rebase -i HEAD~2 (won't work !)
+git commit --amend
+git push --set-upstream upstream master
+git push --force --set-upstream upstream master
+
+mvn archetype:generate \
+-DarchetypeGroupId=org.apache.maven.archetypes \
+-DarchetypeArtifactId=maven-archetype-quickstart \
+-DarchetypeVersion=RELEASE \
+-DgroupId=misa \
+-DartifactId=db \
+-Dversion=1.0.0-SNAPSHOT \
+-DinteractiveMode=false
