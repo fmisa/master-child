@@ -2,25 +2,107 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>misa</groupId>
     <artifactId>master-child</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+
   <groupId>misa</groupId>
   <artifactId>db</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>db</name>
   <url>http://maven.apache.org</url>
+
   <properties>
+    <!-- Core -->
+    <mysql-driver>6.0.6</mysql-driver>
+
+    <!-- Testing -->
+    <junit>4.12</junit>
+
+    <!-- Build -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <liquibase>3.5.3</liquibase>
+    <db.host>${db.host}</db.host>
+    <db.port>${db.port}</db.port>
+    <db.name>${db.name}</db.name>
+    <db.username>${db.username}</db.username>
+    <db.password>${db.password}</db.password>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>${junit}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-driver}</version>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <version>${liquibase}</version>
+        <configuration>
+          <changeLogFile>dbscript/bootstrap.xml</changeLogFile>
+          <driver>com.mysql.cj.jdbc.Driver</driver>
+          <url>jdbc:mysql://${db.host}:${db.port}/${db.name}?useSSL=false&amp;nullNamePatternMatchesAll=true</url>
+          <username>${db.username}</username>
+          <!-- <password>${db.password}</password> -->
+          <emptyPassword>true</emptyPassword>
+          <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+          <clearCheckSums>true</clearCheckSums>
+          <verbose>true</verbose>
+          <dropFirst>false</dropFirst>
+          <!-- <rollbackTag>${liquibase.rollbackTag}</rollbackTag> -->
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>update</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
+
+
+<!--
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
+
+                <dependencies>
+                <dependency>
+                  <groupId>pulse</groupId>
+                  <artifactId>liquibase-aura</artifactId>
+                  <version>${liquibase-aura.version}</version>
+                </dependency>
+                </dependencies>
+
+                <configuration>
+                <changeLogFile>dbscript/nexia/bootstrap.xml</changeLogFile>
+                <driver>org.postgresql.Driver</driver>
+                <url>jdbc:postgresql://${db.url}</url>
+                <username>${db.username}</username>
+                <password>${db.password}</password>
+                <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                <clearCheckSums>true</clearCheckSums>
+                <rollbackTag>${liquibase.rollbackTag}</rollbackTag>
+                </configuration>
+        </plugin>
+-->

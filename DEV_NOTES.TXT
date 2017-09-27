@@ -1,7 +1,7 @@
 Create Github:
 https://github.com/fmisa/master-child.git
 
-Licensing:
+Links Licensing:
 https://choosealicense.com/licenses/
 https://en.wikipedia.org/wiki/Comparison_of_free_and_open-source_software_licenses
 
@@ -37,3 +37,9 @@ mvn archetype:generate \
 -DartifactId=db \
 -Dversion=1.0.0-SNAPSHOT \
 -DinteractiveMode=false
+
+Links Sample Schemas:
+https://www.ntu.edu.sg/home/ehchua/programming/sql/SampleDatabases.html
+http://www.mysqltutorial.org/mysql-sample-database.aspx
+https://www.ntu.edu.sg/home/ehchua/programming/sql/Relational_Database_Design.html
+https://www.ntu.edu.sg/home/ehchua/programming/sql/MySQL_Beginner.html

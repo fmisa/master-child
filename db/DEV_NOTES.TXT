@@ -1,0 +1,76 @@
+
+NOINSTALL MySQL Install:
+* Unzip
+* Create option file: my.ini
+    [mysqld]
+    # set basedir to your installation path
+    basedir=C:/fmm/apps/mysql-5.7.19-winx64
+    # set datadir to the location of your data directory
+    datadir=C:/fmm/apps/mysql-5.7.19-winx64/data
+* Configure MYSQL_HOME add to PATH
+* Initialize Data Directory
+    mysqld --initialize-insecure
+    mysqld --initialize
+* Start the Server
+    mysqld --console
+* Connect and Test
+    mysql -u root mysql
+    show databases;
+    exit;
+
+    mysqladmin version status proc -u root
+
+    mysql test -u root mysql
+
+* Install as WinService
+    SHUTDOWN CURRENT SERVER
+    mysqladmin -u root shutdown
+    mysqladmin -u root shutdown -p password
+
+    mysqld --install
+    mysqld --install MySQL --defaults-file=C:\my-opts.cnf
+        NOTE: I think CDF and INI files are interchangeable
+        NOTE: MUST Use FULLPATH.... to mysqld - even if it's on PATH...
+        %MYSQL_HOME%\bin\mysqld --install MySQL --defaults-file=%MYSQL_HOME%\my.ini
+        %MYSQL_HOME%\bin\mysqld --install MySQL --defaults-file=C:/fmm/apps/mysql-5.7.19-winx64/my.ini
+    mysqld --install-manual
+    mysqld --remote
+
+
+JDBC Database Drivers:
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgresql://${db.url}</url>
+
+          <driver>com.mysql.cj.jdbc.Driver</driver>
+            NOTE: Deprecated: <driver>com.mysql.jdbc.Driver</driver>
+          <url>jdbc:mysql://hostname:port/dbname"</url>
+
+
+Create Databse - mysql -u root mysql
+    create database masterchild;
+    show databases;
+
+    mysql --host=127.0.0.1 --port=3306 mysql -u root
+    mysql --host=127.0.0.1 --port=3306 mysql -u root -p
+    mysql --host=127.0.0.1 --port=3306 mysql -u root -p --execute="show tables;"
+        NOTE: --host=localhost won't work with --port
+
+Execute Compile:
+    Required Properties:
+    -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none
+    -Ddb.host=127.0.0.1 -Ddb.name=masterchild?autoReconnect=true&useSSL=false -Ddb.port=3306 -Ddb.username=root -Ddb.password=none
+    mvn -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none compile
+
+
+
+Liquibase Formated SQL:
+    http://shengwangi.blogspot.ca/2016/04/liquibase-helloworld-example.html
+    http://www.liquibase.org/documentation/sql_format.html
+    --liquibase formatted sql
+    --changeset author:id attribute1:value1 attribute2:value2 [...]
+
+
+Run Liquibase:
+    mvn -Ddb.host=127.0.0.1 '-Ddb.name=masterchild' -Ddb.port=3306 -Ddb.username=root -Ddb.password=none liquibase:update
+
+
