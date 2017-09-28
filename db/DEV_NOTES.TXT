@@ -60,6 +60,7 @@ Execute Compile:
     -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none
     -Ddb.host=127.0.0.1 -Ddb.name=masterchild?autoReconnect=true&useSSL=false -Ddb.port=3306 -Ddb.username=root -Ddb.password=none
     mvn -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none compile
+    mvn -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=adminTest1 -Ddb.password=adminTest1 compile
 
 
 
@@ -72,5 +73,31 @@ Liquibase Formated SQL:
 
 Run Liquibase:
     mvn -Ddb.host=127.0.0.1 '-Ddb.name=masterchild' -Ddb.port=3306 -Ddb.username=root -Ddb.password=none liquibase:update
+    mvn -Ddb.host=127.0.0.1 '-Ddb.name=masterchild' -Ddb.port=3306 -Ddb.username=root -Ddb.password=none clean process-resources liquibase:update
+
+
+Generator - needs driver dependencies provided - run copy dependencies:
+    mvn dependency:copy-dependencies -Dclassifier=sources
+    mvn -U -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none dependency:copy-dependencies -Dclassifier=sources
+    mvn -U -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none dependency:copy-dependencies -DoutputDirectory=./target/libs
+
+Run MyBatis Generator:
+    mvn mybatis-generator:generate
+    mvn -U -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=root -Ddb.password=none mybatis-generator:generate
+    mvn -U -Ddb.host=127.0.0.1 -Ddb.name=masterchild -Ddb.port=3306 -Ddb.username=adminTest1 -Ddb.password=adminTest1 mybatis-generator:generate
+
+MyBatis Links:
+    http://www.mybatis.org/mybatis-3/getting-started.html
+    http://www.henryxi.com/use-idea-mybatis-plugin-generate-mapper-files
+    http://helloworldcoding.blogspot.ca/2011/12/mybatis-3x-hello-world-application.html
+    http://www.henryxi.com/use-idea-mybatis-plugin-generate-mapper-files
+
+
+MySQL Database Tweak:
+    GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' IDENTIFIED BY 'password';
+    GRANT SELECT ON *.* TO 'username'@'localhost';
+
+    GRANT ALL PRIVILEGES ON masterchild.* TO 'adminTest1'@'localhost' IDENTIFIED BY 'adminTest1';
+
 
 

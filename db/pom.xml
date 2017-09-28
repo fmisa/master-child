@@ -18,18 +18,24 @@
   <properties>
     <!-- Core -->
     <mysql-driver>6.0.6</mysql-driver>
+    <mybatis>3.4.5</mybatis>
+    <log4j>1.2.17</log4j>
 
     <!-- Testing -->
     <junit>4.12</junit>
 
     <!-- Build -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.dependency.plugin>3.0.0</maven.dependency.plugin>
     <liquibase>3.5.3</liquibase>
-    <db.host>${db.host}</db.host>
+    <mybatis.generator>1.3.5</mybatis.generator>
+
+    <!-- Provided -->
+<!--    <db.host>${db.host}</db.host>
     <db.port>${db.port}</db.port>
     <db.name>${db.name}</db.name>
     <db.username>${db.username}</db.username>
-    <db.password>${db.password}</db.password>
+    <db.password>${db.password}</db.password>-->
   </properties>
 
   <dependencies>
@@ -39,15 +45,67 @@
       <version>${junit}</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>${mysql-driver}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${log4j}</version>
+    </dependency>
   </dependencies>
 
   <build>
+
+    <resources>
+      <resource>
+          <directory>src/main/resources</directory>
+          <includes>
+              <include>log4j.properties</include>
+              <include>mybatis/**/*.xml</include>
+              <include>mybatis/**/*.properties</include>
+              <include>dbscript/**/*.xml</include>
+              <include>dbscript/**/*.sql</include>
+          </includes>
+          <excludes>
+              <exclude>mybatis/generator/*.*</exclude>
+          </excludes>
+      </resource>
+    </resources>
+
     <plugins>
+<!--      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven.dependency.plugin}</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              &lt;!&ndash; <outputDirectory>${project.build.directory}/alternateLocation</outputDirectory> &ndash;&gt;
+              <outputDirectory>${basedir}/target/libs</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>-->
+
       <plugin>
         <groupId>org.liquibase</groupId>
         <artifactId>liquibase-maven-plugin</artifactId>
@@ -66,43 +124,27 @@
           <!-- <rollbackTag>${liquibase.rollbackTag}</rollbackTag> -->
         </configuration>
         <executions>
-          <execution>
+<!--          <execution>
             <phase>process-resources</phase>
             <goals>
               <goal>update</goal>
             </goals>
-          </execution>
+          </execution>-->
         </executions>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.mybatis.generator</groupId>
+        <artifactId>mybatis-generator-maven-plugin</artifactId>
+        <version>${mybatis.generator}</version>
+        <configuration>
+          <configurationFile>${basedir}/src/main/resources/mybatis/generator/mybatis-generator-config-min.xml</configurationFile>
+          <overwrite>false</overwrite>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
 </project>
-
-
-<!--
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>${liquibase.version}</version>
-
-                <dependencies>
-                <dependency>
-                  <groupId>pulse</groupId>
-                  <artifactId>liquibase-aura</artifactId>
-                  <version>${liquibase-aura.version}</version>
-                </dependency>
-                </dependencies>
-
-                <configuration>
-                <changeLogFile>dbscript/nexia/bootstrap.xml</changeLogFile>
-                <driver>org.postgresql.Driver</driver>
-                <url>jdbc:postgresql://${db.url}</url>
-                <username>${db.username}</username>
-                <password>${db.password}</password>
-                <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                <clearCheckSums>true</clearCheckSums>
-                <rollbackTag>${liquibase.rollbackTag}</rollbackTag>
-                </configuration>
-        </plugin>
--->
