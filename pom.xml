@@ -8,5 +8,6 @@
   <name>master-child</name>
   <modules>
     <module>db</module>
+    <module>service</module>
   </modules>
 </project>
